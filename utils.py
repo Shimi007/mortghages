@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn import preprocessing
 from sklearn.linear_model import LogisticRegression
+import settings
 
 HEADER = 0
 
@@ -13,6 +14,15 @@ def trim_quotes_from_header(data):
 
     for header in data.columns:  # data.columns is your list of headers
         header = header.strip('"')  # Remove the quotes off each header
+        new_headers.append(header)  # Save the new strings without the quotes
+
+    data.columns = new_headers  # Replace the old headers with the new list
+
+def trim_comas_from_header(data):
+    new_headers = []
+
+    for header in data.columns:  # data.columns is your list of headers
+        header = header.strip(',')  # Remove the quotes off each header
         new_headers.append(header)  # Save the new strings without the quotes
 
     data.columns = new_headers  # Replace the old headers with the new list
@@ -29,13 +39,14 @@ def plotting_data_for_analyse_distribution_of_cardinal(df, predict):
     plt.show()
 
     # martial_status
-    df['martial_status'].value_counts(normalize=True).plot.bar(title='Martial_status',
+    print(df["martial_status"].value_counts(normalize=True) * 100)
+    df['martial_status'].value_counts(normalize=True).plot.bar(title='Martial Status',
                                                                color=['lavender', 'green', 'purple', 'gray', 'red'])
     plt.show()
 
     # Education
     df['education'].value_counts(normalize=True).plot.bar(title='Education',
-                                                          color=['lavender', 'green', 'purple', 'gray', 'red'])
+                                                          color=['lavender', 'green', 'purple', 'gray', 'red', 'blue', 'orange', 'pink'])
     plt.show()
 
     # Employment
@@ -44,18 +55,53 @@ def plotting_data_for_analyse_distribution_of_cardinal(df, predict):
     plt.show()
 
     #  Potential customer martial_status
-    df['martial_status'].value_counts(normalize=True).plot.bar(title='Potential customer Martial_status',
+    predict['martial_status'].value_counts(normalize=True).plot.bar(title='Potential Customer Martial Status',
                                                                color=['lavender', 'green', 'purple', 'gray', 'red'])
     plt.show()
 
     # Potential customer Education
-    df['education'].value_counts(normalize=True).plot.bar(title='Potential customer Education',
-                                                          color=['lavender', 'green', 'purple', 'gray', 'red'])
+    predict['education'].value_counts(normalize=True).plot.bar(title='Potential Customer Education',
+                                                          color=['lavender', 'green', 'purple', 'gray', 'red', 'blue', 'orange', 'pink'])
     plt.show()
 
     # Potential customer Employment
-    predict['employment'].value_counts(normalize=True).plot.bar(title='Potential customer Employment',
-                                                           color=['lavender', 'green', 'purple', 'gray', 'red'])
+    predict['employment'].value_counts(normalize=True).plot.bar(title='Potential Customer Employment',
+                                                                color=['lavender', 'green', 'purple', 'gray', 'red'])
+    plt.show()
+
+    # Gender & mortgage
+    Gender = pd.crosstab(df["gender"], df["mortage_yn"])
+    Gender.div(Gender.sum(1).astype(float), axis=0).plot(kind="bar", stacked=True, figsize=(4, 4),
+                                                         color=['green', 'purple'])
+    plt.xlabel("Gender")
+    plt.ylabel("Percentage")
+    plt.show()
+
+    # Martial_status & mortgage
+    martial_status = pd.crosstab(df["martial_status"], df["mortage_yn"])
+    martial_status.div(martial_status.sum(1).astype(float), axis=0).plot(kind="bar", stacked=True, figsize=(4, 4),
+                                                                         color=['lavender', 'green', 'purple', 'gray',
+                                                                                'red'])
+    plt.xlabel("Martial Status")
+    plt.ylabel("Percentage")
+    plt.show()
+
+    # Education & mortgage
+    education = pd.crosstab(df["education"], df["mortage_yn"])
+    education.div(education.sum(1).astype(float), axis=0).plot(kind="bar", stacked=True, figsize=(4, 4),
+                                                               color=['lavender', 'green', 'purple', 'gray',
+                                                                      'red'])
+    plt.xlabel("education")
+    plt.ylabel("Percentage")
+    plt.show()
+
+    # Employment & mortgage
+    employment = pd.crosstab(df["employment"], df["mortage_yn"])
+    employment.div(employment.sum(1).astype(float), axis=0).plot(kind="bar", stacked=True, figsize=(4, 4),
+                                                                 color=['lavender', 'green', 'purple', 'gray',
+                                                                        'red'])
+    plt.xlabel("employment")
+    plt.ylabel("Percentage")
     plt.show()
 
 
@@ -67,7 +113,6 @@ def plotting_data_analyse_distribution_of_numeric(df):
     # current_balance_eur
     df["current_balance_eur"].plot.box(figsize=(16, 5), title='Current balance eur')
     plt.show()
-
 
 def visualize_confusion_matrix(cnf_matrix):
     class_names = [0, 1]  # name  of classes
@@ -99,4 +144,14 @@ def potential_customers(prediction_set, LR):
 
 def preprocessing_data_for_writing(prediction_set, y_test):
     prediction_set['mortage_yn'] = y_test
-    print(prediction_set.to_csv('/Users/shimi/Desktop/data science/mortages/data/test_potentials_customers.csv'))
+    print(prediction_set.to_csv(settings.save_mortgage_path))
+
+
+def plotting_data_after_training_potential_customers():
+    prediction_set = pd.read_csv(settings.save_mortgage_path, sep=',', engine='python')
+    trim_comas_from_header(prediction_set)
+
+    # Morgages
+    print(prediction_set["mortage_yn"].value_counts(normalize=True) * 100)
+    prediction_set["mortage_yn"].value_counts(normalize=True).plot.bar(title='Potential Customers Mortages', color=['lavender', 'green'])
+    plt.savefig('/Users/shimi/Desktop/data science/mortages/plots/test2.png')

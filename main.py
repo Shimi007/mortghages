@@ -1,12 +1,9 @@
 import pandas as pd
 import numpy as np
+
 from sklearn import preprocessing
-from sklearn.preprocessing import OrdinalEncoder
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import log_loss
 from sklearn import metrics
-import itertools
-import datetime
 
 import utils
 import settings
@@ -94,6 +91,10 @@ df['current_job'] = pd.to_datetime(df['current_job']).astype((np.int))//10 ** 9
 prediction_set['current_address'] = pd.to_datetime(prediction_set['current_address']).astype((np.int))/10 ** 9
 prediction_set['current_job'] = pd.to_datetime(prediction_set['current_job']).astype((np.int))//10 ** 9
 
+
+# Distributtion of numeric
+utils.plotting_data_analyse_distribution_of_numeric(df)
+
 print(df.head(10))
 print(df.info())
 print("****************************************************")
@@ -131,5 +132,7 @@ print("Recall:", metrics.recall_score(y_cv, y_pred_cv))
 # Modeling Potential customer
 y_test = utils.potential_customers(prediction_set, LR)
 utils.preprocessing_data_for_writing(prediction_set, y_test)
+
+utils.plotting_data_after_training_potential_customers()
 
 
