@@ -133,6 +133,6 @@ print("Recall:", metrics.recall_score(y_cv, y_pred_cv))
 y_test = utils.potential_customers(prediction_set, LR)
 utils.preprocessing_data_for_writing(prediction_set, y_test)
 
-utils.plotting_data_after_training_potential_customers()
+# utils.plotting_data_after_training_potential_customers()
 
 

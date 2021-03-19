@@ -127,7 +127,7 @@ def visualize_confusion_matrix(cnf_matrix):
     plt.title('Confusion matrix', y=1.1)
     plt.ylabel('Actual label')
     plt.xlabel('Predicted label')
-    plt.savefig('/Users/shimi/Desktop/data science/mortages/plots/test1.png')
+    plt.savefig(settings.save_confusion_matrix_plot)
 
 
 def potential_customers(prediction_set, LR):
@@ -147,11 +147,11 @@ def preprocessing_data_for_writing(prediction_set, y_test):
     print(prediction_set.to_csv(settings.save_mortgage_path))
 
 
-def plotting_data_after_training_potential_customers():
-    prediction_set = pd.read_csv(settings.save_mortgage_path, sep=',', engine='python')
-    trim_comas_from_header(prediction_set)
-
-    # Morgages
-    print(prediction_set["mortage_yn"].value_counts(normalize=True) * 100)
-    prediction_set["mortage_yn"].value_counts(normalize=True).plot.bar(title='Potential Customers Mortages', color=['lavender', 'green'])
-    plt.savefig('/Users/shimi/Desktop/data science/mortages/plots/test2.png')
+# def plotting_data_after_training_potential_customers():
+#     prediction_set = pd.read_csv(settings.save_mortgage_path, sep=',', engine='python')
+#     trim_comas_from_header(prediction_set)
+#
+#     # Morgages
+#     print(prediction_set["mortage_yn"].value_counts(normalize=True) * 100)
+#     prediction_set["mortage_yn"].value_counts(normalize=True).plot.bar(title='Potential Customers Mortages', color=['lavender', 'green'])
+#     plt.savefig('/Users/shimi/Desktop/data science/mortages/plots/test2.png')
